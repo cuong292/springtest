@@ -14,38 +14,23 @@ import javax.sql.DataSource;
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.demo.springtest")
-@PropertySource({"classpath:sql.properties", "classpath:connection.properties"})
+@PropertySource({"classpath:mysql-props.properties"})
 public class RestMVCConfiguration {
 
     @Autowired
-    Environment environment;
+    Environment env;
 
     @Bean
     public DataSource dataSource() {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         try {
-            dataSource.setDriverClass(environment.getProperty("jdbc.driver"));
-        } catch (Exception e) {
-            System.out.println(e.toString());
+            dataSource.setDriverClass(env.getProperty("jdbc.driver"));
+        } catch (Exception e){
+            System.out.println("driver not found");
         }
-        dataSource.setUser(environment.getProperty("jdbc.username"));
-        dataSource.setPassword(environment.getProperty("jdbc.password"));
-        dataSource.setJdbcUrl(environment.getProperty("jdbc.url"));
-
-        dataSource.setInitialPoolSize(getIntProperty("connection.pool.initialPoolSize"));
-        dataSource.setMinPoolSize(getIntProperty("connection.pool.minPoolSize"));
-        dataSource.setMaxPoolSize(getIntProperty("connection.pool.maxPoolSize"));
-        dataSource.setMaxIdleTime(getIntProperty("connection.pool.maxIdleTime"));
+        dataSource.setUser(env.getProperty("jdbc.username"));
+        dataSource.setPassword(env.getProperty("jdbc.password"));
+        dataSource.setJdbcUrl(env.getProperty("jdbc.url"));
         return dataSource;
-    }
-
-    private int getIntProperty(String s) {
-        String property = environment.getProperty(s);
-        try {
-            return Integer.valueOf(property);
-        } catch (Exception e) {
-            System.out.println("Property is wrong type");
-        }
-        return 0;
     }
 }
