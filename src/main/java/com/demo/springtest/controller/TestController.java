@@ -1,4 +1,4 @@
-package com.demo.springtest.config.controller;
+package com.demo.springtest.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
