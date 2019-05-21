@@ -11,6 +11,7 @@ import com.nimbusds.jwt.SignedJWT;
 import jdk.nashorn.internal.parser.Token;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -69,10 +70,9 @@ public class JwtService {
     public boolean isTokenExpire(String token) {
         JWTClaimsSet claimsSet = getDataFromToken(token);
         if (claimsSet != null) {
-            try {
-                Date date = claimsSet.getExpirationTime();
-                //return isExpire(date.)
-            }
+            Date date = claimsSet.getExpirationTime();
+            return date.before(Calendar.getInstance().getTime());
         }
+        return true;
     }
 }

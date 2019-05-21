@@ -1,5 +1,6 @@
 package com.demo.springtest.controller;
 
+import com.demo.springtest.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/authorization")
 public class LoginController {
     @Autowired
+    LoginService mLoginService;
 
 
     @PostMapping("/login")
