@@ -18,9 +18,9 @@ public class LoginDAOImpl implements LoginDAO {
     @Override
     public int login(String username, String password) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Account", Account.class);
-//        query.setParameter(1,username);
-//        query.setParameter(2, password);
+        Query query = session.createQuery("from Account as a where a.userName = ?1 and a.password = ?2", Account.class);
+        query.setParameter(1,username);
+        query.setParameter(2, password);
         List<Account> userAccounts = query.getResultList();
         if (userAccounts.size() != 0) {
             return userAccounts.get(0).getUserId();
