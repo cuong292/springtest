@@ -1,6 +1,8 @@
-package com.demo.springtest.response;
+package com.demo.springtest.base;
 
 import org.springframework.http.ResponseEntity;
+
+import java.util.Date;
 
 public class BaseError {
     private int status;
@@ -10,10 +12,15 @@ public class BaseError {
     public BaseError() {
     }
 
-    public BaseError(int status, String message, long timeStamp) {
+    public BaseError(String message, int status) {
         this.status = status;
         this.message = message;
-        this.timeStamp = timeStamp;
+        this.timeStamp = new Date().getTime();
+    }
+
+    public BaseError(String message) {
+        this.message = message;
+        this.timeStamp = new Date().getTime();
     }
 
     public int getStatus() {

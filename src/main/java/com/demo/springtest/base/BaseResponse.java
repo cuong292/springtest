@@ -1,4 +1,6 @@
-package com.demo.springtest.response;
+package com.demo.springtest.base;
+
+import com.demo.springtest.base.BaseError;
 
 public class BaseResponse<T> {
     private T data;

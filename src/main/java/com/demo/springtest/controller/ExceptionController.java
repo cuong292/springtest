@@ -1,8 +1,9 @@
 package com.demo.springtest.controller;
 
-import com.demo.springtest.response.BaseError;
-import com.demo.springtest.response.BaseResponse;
-import com.demo.springtest.response.BaseResponseEntity;
+import com.demo.springtest.exception.NotFoundException;
+import com.demo.springtest.base.BaseError;
+import com.demo.springtest.base.BaseResponse;
+import com.demo.springtest.base.BaseResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,13 +22,14 @@ public class ExceptionController {
         return new BaseResponseEntity(baseResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler
-    public BaseResponseEntity handleException(NumberFormatException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public BaseResponseEntity handleException(NotFoundException e) {
         BaseResponse baseResponse = new BaseResponse();
         BaseError error = new BaseError();
-        error.setMessage("Number format wrong");
-        error.setTimeStamp(Calendar.getInstance().getTimeInMillis());
-        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        return new BaseResponseEntity(baseResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setMessage(e.getMessage());
+        baseResponse.setData(null);
+        baseResponse.setError(error);
+        return new BaseResponseEntity(baseResponse, HttpStatus.NOT_FOUND);
     }
 }

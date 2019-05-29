@@ -1,5 +1,6 @@
-package com.demo.springtest.response;
+package com.demo.springtest.base;
 
+import com.demo.springtest.base.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
