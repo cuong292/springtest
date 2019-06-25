@@ -6,20 +6,26 @@ import javax.persistence.*;
 @Table(name = "account")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "uid")
+    private String uid;
 
     public Account() {
+    }
+
+    public Account(String userName, String password, String uid) {
+        this.email = userName;
+        this.password = password;
+        this.uid = uid;
     }
 
     public int getId() {
@@ -31,11 +37,11 @@ public class Account {
     }
 
     public String getUserName() {
-        return userName;
+        return email;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.email = userName;
     }
 
     public String getPassword() {
@@ -46,21 +52,21 @@ public class Account {
         this.password = password;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
-                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", userId=" + userId +
+                ", uid='" + uid + '\'' +
                 '}';
     }
 }

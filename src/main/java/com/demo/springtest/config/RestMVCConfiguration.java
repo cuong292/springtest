@@ -1,5 +1,11 @@
 package com.demo.springtest.config;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.mchange.net.MailSender;
+import com.mchange.net.SmtpMailSender;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +14,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import sun.rmi.runtime.Log;
 
 import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 @EnableWebMvc
@@ -25,6 +35,27 @@ public class RestMVCConfiguration {
 
     @Autowired
     Environment env;
+
+    @Bean
+    public FirebaseApp firebaseApp() {
+        try {
+            FileInputStream serviceAccount = new FileInputStream("E:\\IntelProject\\springtest\\nakedphase2-firebase-adminsdk.json");
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://nakedphase2.firebaseio.com")
+                    .build();
+
+            return FirebaseApp.initializeApp(options);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Bean
+    @Autowired
+    public FirebaseAuth firebaseAuth(FirebaseApp firebaseApp) {
+        return FirebaseAuth.getInstance(firebaseApp);
+    }
 
     @Bean
     public DataSource dataSource() {
@@ -81,5 +112,20 @@ public class RestMVCConfiguration {
         txManager.setSessionFactory(sessionFactory);
 
         return txManager;
+    }
+
+    @Bean
+    public JavaMailSenderImpl mailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+        mailSender.setUsername("nghiembacuong1122@gmail.com");
+        mailSender.setPassword("hoilamgi96?");
+        Properties properties = new Properties();
+        properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.starttls.enable", "true");
+        properties.setProperty("mail.smtp.quitwait", "false");
+        mailSender.setJavaMailProperties(properties);
+        return mailSender;
     }
 }

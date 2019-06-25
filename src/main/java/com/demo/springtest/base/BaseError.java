@@ -1,7 +1,5 @@
 package com.demo.springtest.base;
 
-import org.springframework.http.ResponseEntity;
-
 import java.util.Date;
 
 public class BaseError {
