@@ -24,7 +24,7 @@ public class LoginController {
         if (token == null) {
             throw new CommonException("Wrong username / password");
         } else {
-            return new BaseResponseEntity(new BaseSuccessResponse(new SingleValueDTO<>(token)), HttpStatus.OK);
+            return new BaseResponseEntity(new BaseSuccessResponse(token), HttpStatus.OK);
         }
     }
 

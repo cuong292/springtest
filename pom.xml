@@ -135,10 +135,9 @@
 
     <build>
 
-        <finalName>spring-crm-rest</finalName>
+        <finalName>spring-crm</finalName>
 
         <plugins>
-
             <!-- Builds a Web Application Archive (WAR) file from the project output
                 and its dependencies. -->
             <plugin>
