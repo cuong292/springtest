@@ -1,12 +1,11 @@
 package com.demo.springtest.controller;
 
 import com.demo.springtest.base.BaseMessageResponse;
-import com.demo.springtest.base.BaseResponse;
 import com.demo.springtest.base.BaseResponseEntity;
 import com.demo.springtest.base.BaseSuccessResponse;
+import com.demo.springtest.dto.SingleValueDTO;
 import com.demo.springtest.dto.UserProfileDTO;
-import com.demo.springtest.exception.NotFoundException;
-import com.demo.springtest.entity.Account;
+import com.demo.springtest.exception.CommonException;
 import com.demo.springtest.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +19,12 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public BaseResponseEntity login(@RequestBody Account account) {
+    public BaseResponseEntity login(@RequestBody UserProfileDTO account) {
         String token = mLoginService.login(account);
         if (token == null) {
-            throw new NotFoundException("Wrong username / password");
+            throw new CommonException("Wrong username / password");
         } else {
-            return new BaseResponseEntity(new BaseSuccessResponse(token), HttpStatus.OK);
+            return new BaseResponseEntity(new BaseSuccessResponse(new SingleValueDTO<>(token)), HttpStatus.OK);
         }
     }
 
@@ -35,7 +34,7 @@ public class LoginController {
         if (isRegisterSuccess) {
             return new BaseResponseEntity(new BaseSuccessResponse(new BaseMessageResponse("Success")), HttpStatus.OK);
         } else {
-            throw new NotFoundException("Wrong username / password");
+            throw new CommonException("Wrong username / password");
         }
     }
 }

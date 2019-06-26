@@ -1,6 +1,6 @@
 package com.demo.springtest.controller;
 
-import com.demo.springtest.exception.NotFoundException;
+import com.demo.springtest.exception.CommonException;
 import com.demo.springtest.base.BaseError;
 import com.demo.springtest.base.BaseResponse;
 import com.demo.springtest.base.BaseResponseEntity;
@@ -19,17 +19,16 @@ public class ExceptionController {
         error.setMessage(e.getMessage());
         error.setTimeStamp(Calendar.getInstance().getTimeInMillis());
         error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        baseResponse.setError(error);
         return new BaseResponseEntity(baseResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public BaseResponseEntity handleException(NotFoundException e) {
+    @ExceptionHandler(CommonException.class)
+    public BaseResponseEntity handleException(CommonException e) {
         BaseResponse baseResponse = new BaseResponse();
-        BaseError error = new BaseError();
-        error.setStatus(HttpStatus.NOT_FOUND.value());
-        error.setMessage(e.getMessage());
+        BaseError error = new BaseError(e.getMessage(), HttpStatus.OK.value());
         baseResponse.setData(null);
         baseResponse.setError(error);
-        return new BaseResponseEntity(baseResponse, HttpStatus.NOT_FOUND);
+        return new BaseResponseEntity(baseResponse, HttpStatus.OK);
     }
 }

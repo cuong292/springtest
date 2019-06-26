@@ -8,6 +8,7 @@ public class BaseError {
     private long timeStamp;
 
     public BaseError() {
+        this.timeStamp = new Date().getTime();
     }
 
     public BaseError(String message, int status) {

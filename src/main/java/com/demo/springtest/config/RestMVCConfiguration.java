@@ -4,8 +4,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.mchange.net.MailSender;
-import com.mchange.net.SmtpMailSender;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +17,9 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import sun.rmi.runtime.Log;
 
 import javax.sql.DataSource;
 import java.io.FileInputStream;
-import java.net.UnknownHostException;
 import java.util.Properties;
 
 @EnableWebMvc
@@ -115,7 +111,7 @@ public class RestMVCConfiguration {
     }
 
     @Bean
-    public JavaMailSenderImpl mailSender() {
+    public JavaMailSenderImpl getMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
@@ -124,7 +120,9 @@ public class RestMVCConfiguration {
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
+        properties.put("mail.transport.protocol", "smtp");
         properties.setProperty("mail.smtp.quitwait", "false");
+        properties.put("mail.debug", "true");
         mailSender.setJavaMailProperties(properties);
         return mailSender;
     }

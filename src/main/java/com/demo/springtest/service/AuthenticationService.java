@@ -17,12 +17,8 @@ public class AuthenticationService {
     JwtService tokenService;
 
     @Transactional
-    public String login(Account account) {
-        int userId = mAuthenticationDAO.login(account.getUserName(), account.getPassword());
-        if (userId != 0) {
-            return tokenService.generateToken(userId);
-        }
-        return null;
+    public String login(UserProfileDTO account) {
+        return mAuthenticationDAO.login(account.getEmail(), account.getPassword());
     }
 
     @Transactional
