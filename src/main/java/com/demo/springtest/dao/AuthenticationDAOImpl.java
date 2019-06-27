@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Repository;
-
-import java.net.URL;
-import java.sql.ResultSet;
 import java.util.List;
 
 @Repository
@@ -56,24 +53,32 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
         if (userExist(userProfileDTO.getEmail())) {
             throw new CommonException("Your email has been used");
         }
-        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                .setEmail(userProfileDTO.getEmail())
-                .setEmailVerified(false)
-                .setPassword(userProfileDTO.getPassword())
-                .setPhoneNumber(userProfileDTO.getPhoneNumber())
-                .setDisplayName(userProfileDTO.getUserName())
-                .setDisabled(false);
-        UserRecord record = null;
+
         try {
+            UserRecord.CreateRequest request;
+            request = new UserRecord.CreateRequest()
+                    .setEmail(userProfileDTO.getEmail())
+                    .setEmailVerified(false)
+                    .setPassword(userProfileDTO.getPassword())
+                    .setPhoneNumber(userProfileDTO.getPhoneNumber())
+                    .setDisplayName(userProfileDTO.getUserName())
+                    .setDisabled(false);
+            UserRecord record;
             record = firebaseAuth.createUser(request);
             saveUserProfile(record, userProfileDTO);
             createEmailConfirmationLink(userProfileDTO.getEmail());
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            throw new CommonException(e.getMessage());
         }
     }
+
+    @Override
+    public boolean resetPassword(String email) {
+        //khong lam dc
+        return false;
+    }
+
 
     private boolean userExist(String email) {
         Session session = sessionFactory.getCurrentSession();
@@ -85,8 +90,8 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     private void createEmailConfirmationLink(String email) {
         try {
-            String link = firebaseAuth.generateEmailVerificationLink(
-                    email, ActionCodeSettings.builder().setUrl("https://nakedphase2.page.link/qLo3").setHandleCodeInApp(false).build());
+            String link = firebaseAuth.generateEmailVerificationLink(email, ActionCodeSettings.builder()
+                    .setUrl("https://nakedphase2.page.link").setDynamicLinkDomain("http://localhost:8080/authentication/reset_token?email=" + email).setHandleCodeInApp(false).build());
             // Construct email verification template, embed the link and send
             // using custom SMTP server.
             sendUserVerificationEmail(email, link);
@@ -108,4 +113,6 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
         Account account = new Account(userProfileDTO.getEmail(), userProfileDTO.getPassword(), record.getUid());
         session.saveOrUpdate(account);
     }
+
+
 }

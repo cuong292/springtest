@@ -6,4 +6,6 @@ public interface AuthenticationDAO {
     String login(String username,String password);
 
     boolean register(UserProfileDTO userProfileDTO);
+
+    boolean resetPassword(String email);
 }
